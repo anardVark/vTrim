@@ -29,12 +29,13 @@ footer = [
         sg.Button('Trim Select File', key='-STRIP FILE-'),
         sg.Button('Trim Entire Directory', key='-STRIP DIR-'),
         sg.Text('Trim Beginning:'),
-        sg.In(key="-TRIM INTRO-"),
+        sg.In(default_text=(0), size=(10, 5), justification='center', tooltip="Enter amount of time to trim from video intro", key="-TRIM INTRO-"),
         sg.Text('Trim End:'),
-        sg.In(key="-TRIM END-")
+        sg.In(default_text=(0),  size=(10, 5), justification='center', tooltip="Enter amount of time to trim from video end", key="-TRIM END-")
     ],
     [
-        sg.Image(os.path.join('\\\\truenas\\Storasaurus\\Personal Files\\Nerd Shit\\Coding Projects\\PlayOnVideoCleaner\\vT_256.png'), subsample=4)
+        sg.Image(os.path.join('\\\\truenas\\Storasaurus\\Personal Files\\Nerd Shit\\Coding Projects\\PlayOnVideoCleaner\\vT_256.png'), subsample=4),
+        sg.Output(size=(40, 8), visible=False)
     ]
 ]
 layout = [
@@ -50,8 +51,9 @@ layout = [
 ]
 
 icon_path = os.path.join(os.getcwd(), "vT_256.png")
+title_icon = os.path.join(os.getcwd(), "vT_32.png")
 
-window = sg.Window("vTrim", layout, grab_anywhere_using_control=True, icon=icon_path, titlebar_background_color='black', titlebar_text_color='white', use_custom_titlebar=True)
+window = sg.Window("vTrim", layout, grab_anywhere_using_control=True, resizable=True, icon=icon_path)
 progress_bar = window['-STATUS-']
 
 # Create an event loop
@@ -90,6 +92,7 @@ def main():
             except Exception as e:
                 esp.wrout(f'[{datetime.datetime.today().strftime("%Y-%m-%d")}][There was an error trimming the file ({filename})] | [{e}]')
                 pass
+
         elif event == "-STRIP DIR-":
             try:
                 if (vt.verify_integer(int(values["-TRIM INTRO-"]) == False)):

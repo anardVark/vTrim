@@ -15,7 +15,7 @@ options = {
 setup(
     name = "vTrim",
     options = options,
-    version = "0.0.4",
+    version = "0.0.6",
     description = 'Trim the intros and outros of individual or whole directories of videos.',
     executables = executables
 )
