@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 import os.path
 import pytrimmer as pyt
 import essential_py as esp
+import vTrim as vt
 import datetime as datetime
 from time import sleep
 
@@ -26,7 +27,11 @@ footer = [
     ],
     [
         sg.Button('Trim Select File', key='-STRIP FILE-'),
-        sg.Button('Trim Entire Directory', key='-STRIP DIR-')
+        sg.Button('Trim Entire Directory', key='-STRIP DIR-'),
+        sg.Text('Trim Beginning:'),
+        sg.In(key="-TRIM INTRO-"),
+        sg.Text('Trim End:'),
+        sg.In(key="-TRIM END-")
     ],
     [
         sg.Image(os.path.join('\\\\truenas\\Storasaurus\\Personal Files\\Nerd Shit\\Coding Projects\\PlayOnVideoCleaner\\vT_256.png'), subsample=4)
@@ -63,6 +68,7 @@ def main():
                 file_list = os.listdir(values["-FOLDER-"])
             except:
                 file_list = []
+                pass
 
             fnames = [
                 f
@@ -77,7 +83,7 @@ def main():
                 filename = os.path.join(values["-FOLDER-"], values["-FILE LIST-"][0])
                 
                 esp.wrout(f'Trimming File: {filename}')
-                pyt.strip(values['-FOLDER-'], os.path.join(values['-FOLDER-'], 'TRIMMED'), values["-FILE LIST-"][0], 12, -5)
+                pyt.strip(values['-FOLDER-'], os.path.join(values['-FOLDER-'], 'TRIMMED'), values["-FILE LIST-"][0], int(values["-TRIM INTRO-"]), int(values["-TRIM END-"]))
 
                 progress_bar.update_bar(1,1)
 
@@ -86,12 +92,17 @@ def main():
                 pass
         elif event == "-STRIP DIR-":
             try:
+                if (vt.verify_integer(int(values["-TRIM INTRO-"]) == False)):
+                    sg.popup("Please Only Enter Integers into Trim Time Fields")
+                    break
+
                 n = 1
                 esp.wrout(f'Trimming Directory: {values["-FOLDER-"]}')
                 video_list = pyt.list_dir(values['-FOLDER-'])
+                progress_bar.update_bar(0, len(video_list))
 
                 for video in video_list:
-                    pyt.strip(values['-FOLDER-'], os.path.join(values['-FOLDER-'], 'TRIMMED'), video, 12, -5)
+                    pyt.strip(values['-FOLDER-'], os.path.join(values['-FOLDER-'], 'TRIMMED'), video, int(values["-TRIM INTRO-"]), int(values["-TRIM END-"]))
                     progress_bar.update_bar(n, len(video_list))
                     n += 1
 
@@ -106,3 +117,4 @@ if (__name__ == '__main__'):
         main()
     except Exception as e:
         esp.wrout(f"General Failure {e}")
+        pass

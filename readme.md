@@ -1,6 +1,6 @@
 # vTrim
 ## About
-This program also you to trim the the beginnings and endings off mp4 files. You can either trim a single video or entire directory.
+This program allows you to trim the the beginnings and endings off mp4 files. You can either trim a single video or entire directory.
 ## Version Notes
 ### v 0.0.4
 ```
